@@ -20,9 +20,9 @@ public class EnemyController : MonoBehaviour
         Vector3 movePosition = transform.position;
         movePosition.x = Mathf.MoveTowards(transform.position.x, player.transform.position.x, enemy.Velocity);
         movePosition.z = Mathf.MoveTowards(transform.position.z, player.transform.position.z, enemy.Velocity);
-        movePosition.y = Mathf.MoveTowards(transform.position.y, 0.5f, enemy.Velocity);
+        movePosition.y = Mathf.MoveTowards(transform.position.y, 1f, enemy.Velocity);
         enemyRb.MovePosition(movePosition);
-        enemyRb.velocity = new Vector3(enemyRb.velocity.x, 0.5f, enemyRb.velocity.z);
+        enemyRb.velocity = new Vector3(enemyRb.velocity.x, 1f, enemyRb.velocity.z);
         enemyRb.velocity = enemyRb.velocity.normalized * enemy.velocity;
     }
 

@@ -2,6 +2,7 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 using Random = UnityEngine.Random;
 
 public class PlayerController : MonoBehaviour
@@ -21,10 +22,18 @@ public class PlayerController : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        playerRb.velocity = new Vector3(playerRb.velocity.x, 0.5f, playerRb.velocity.z);
+        playerRb.velocity = new Vector3(playerRb.velocity.x, 1f, playerRb.velocity.z);
         playerRb.velocity = playerRb.velocity.normalized * player.velocity;
-        transform.position = new Vector3(transform.position.x, 0.5f, transform.position.z);
+        transform.position = new Vector3(transform.position.x, 1f, transform.position.z);
         SpawnSpringBox();
+    }
+
+    void OnCollisionEnter(Collision collision)
+    {
+        if (collision.gameObject.tag == "Enemy" || collision.gameObject.tag == "Finish")
+        {
+            SceneManager.LoadScene("SceneLevel1");
+        }
     }
 
     private void SetDefaultValues()
@@ -38,8 +47,8 @@ public class PlayerController : MonoBehaviour
         if (Input.GetMouseButtonDown(0))
         {
             RaycastHit hit;
-            Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
-            //Make Whatever a Raycast layer or if you don't want it just exclude it
+            Ray ray = Camera.main.ScreenPointToRay(Input.GetTouch(0).position);
+            //Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
             if (Physics.Raycast(ray, out hit))
             {
                 Instantiate(springBox, new Vector3(hit.point.x, 0.5f, hit.point.z), Quaternion.identity);
@@ -50,7 +59,7 @@ public class PlayerController : MonoBehaviour
     private void InitiateRandomMoviment()
     {
 
-        playerRb.velocity = new Vector3(player.Velocity * -1, 0.5f, Random.Range(player.Velocity * -1, player.Velocity));
+        playerRb.velocity = new Vector3(player.Velocity * -1, 1f, Random.Range(player.Velocity * -1, player.Velocity));
     }
 
 }
