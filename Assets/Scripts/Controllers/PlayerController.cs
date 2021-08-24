@@ -8,15 +8,18 @@ using Random = UnityEngine.Random;
 public class PlayerController : MonoBehaviour
 {
     private PlayerModel player;
+    private ScoreModel scoreModel;
     private Rigidbody playerRb;
     public GameObject springBox;
     // Start is called before the first frame update
     void Start()
     {
         player = GetComponent<PlayerModel>();
+        scoreModel = GameObject.Find("/ScoreCounter").GetComponent<ScoreModel>();
         playerRb = player.GetComponent<Rigidbody>();
         SetDefaultValues();
         InitiateRandomMoviment();
+        StartCoroutine("updateScore");
     }
 
     // Update is called once per frame
@@ -28,17 +31,39 @@ public class PlayerController : MonoBehaviour
         SpawnSpringBox();
     }
 
-    void OnCollisionEnter(Collision collision)
+    public int getScore()
     {
-        if (collision.gameObject.tag == "Enemy" || collision.gameObject.tag == "Finish")
-        {
-            SceneManager.LoadScene("SceneGameMenu");
+        return scoreModel.Score;
+    }
+    IEnumerator updateScore()
+    {
+        while (true) { 
+            yield return new WaitForSeconds(1f);
+            scoreModel.Score--;
         }
     }
 
+    void OnCollisionEnter(Collision collision)
+    {
+        if (collision.gameObject.tag == "Enemy")
+        {
+            SceneManager.LoadScene("SceneGameMenu");
+        }
+
+        if (collision.gameObject.tag == "Finish")
+        {
+                SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex + 1);
+                scoreModel.Score += 1000;
+        }
+    }
     private void SetDefaultValues()
     {
         player.Velocity = 5.0f;
+
+        if (SceneManager.GetActiveScene().name == "SceneLevel1") {
+            scoreModel.Score = 1000;
+        }
+
     }
 
 
