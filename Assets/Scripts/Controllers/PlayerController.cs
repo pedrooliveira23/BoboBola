@@ -54,8 +54,8 @@ public class PlayerController : MonoBehaviour
         if (Input.GetMouseButtonDown(0) && Time.timeScale == 1)
         {
             RaycastHit hit;
-            //Ray ray = Camera.main.ScreenPointToRay(Input.GetTouch(0).position);
-            Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
+            Ray ray = Camera.main.ScreenPointToRay(Input.GetTouch(0).position);
+            //Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
             if (Physics.Raycast(ray, out hit) && (hit.collider.tag != "Player" && hit.collider.tag != "Enemy") && player.CanCreateSpringBox)
             {
                 Instantiate(springBox, new Vector3(hit.point.x, 0.5f, hit.point.z), Quaternion.identity);
