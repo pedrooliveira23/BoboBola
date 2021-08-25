@@ -16,8 +16,7 @@ public class GameOverUIController : MonoBehaviour
         GameObject.Find("/CanvasMenu/BtnRestart").GetComponent<Button>().onClick.AddListener(sceneManagerController.goToSceneGamePlay);
         GameObject.Find("/CanvasMenu/BtnQuit").GetComponent<Button>().onClick.AddListener(sceneManagerController.quitGame);
 
-        GameObject.Find("/CanvasMenu/TxtScore").GetComponent<Text>().text = "Pontuação: " + gameMasterController.getScore();
-        GameObject.Find("/CanvasMenu/TxtLevel").GetComponent<Text>().text = "Nível: " + gameMasterController.getLastLevel();
+        GameObject.Find("/CanvasMenu/TxtLevel").GetComponent<Text>().text = "Nível Alcançado: " + gameMasterController.getLastLevel();
     }
 
 }

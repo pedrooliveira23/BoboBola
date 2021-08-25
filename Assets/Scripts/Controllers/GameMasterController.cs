@@ -12,7 +12,7 @@ public class GameMasterController : MonoBehaviour
     private GameMasterModel gameMasterModel;
     void Start()
     {
-        StartCoroutine("updateScore");
+        gameMasterModel = GetComponent<GameMasterModel>();
     }
 
     // Update is called once per frame
@@ -28,42 +28,9 @@ public class GameMasterController : MonoBehaviour
         }
     }
 
-    private void OnEnable()
-    {
-        gameMasterModel = GetComponent<GameMasterModel>();
-        gameMasterModel.ScoreCountable = true;
-        SceneManager.sceneLoaded += OnSceneLoaded;
-    }
-    void OnSceneLoaded(Scene scene, LoadSceneMode mode)
-    {
-        if (SceneManager.GetActiveScene().name == "SceneLevel1")
-        {
-            gameMasterModel.Score = 1000;
-        }
-    }
-
-    public int getScore()
-    {
-        return gameMasterModel.Score;
-    }
-
-    public void setScore(int value)
-    {
-        gameMasterModel.Score = value;
-    }
-    IEnumerator updateScore()
-    {
-        while (gameMasterModel.ScoreCountable)
-        {
-            yield return new WaitForSeconds(1f);
-            gameMasterModel.Score--;
-        }
-    }
-
     public void MoveToGameOverScene()
     {
         gameMasterModel.LastLevel = SceneManager.GetActiveScene().buildIndex;
-        gameMasterModel.ScoreCountable = false;
         SceneManager.LoadScene("SceneGameOver");
     }
 
@@ -72,7 +39,6 @@ public class GameMasterController : MonoBehaviour
         if (SceneManager.GetActiveScene().buildIndex + 1 < SceneManager.sceneCountInBuildSettings)
         {
             SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex + 1);
-            gameMasterModel.Score += 1000;
         } else
         {
             MoveToGameOverScene();

@@ -28,7 +28,7 @@ public class GamePlayUIController : MonoBehaviour
     {
         try
         {
-            scoreText.text = "Pontuação: " + gameMasterController.getScore() + "\nNível: " + SceneManager.GetActiveScene().buildIndex;
+            scoreText.text = "Nível: " + SceneManager.GetActiveScene().buildIndex;
         } catch (NullReferenceException ex)
         {
             Debug.Log(ex.Message);
