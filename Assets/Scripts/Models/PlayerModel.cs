@@ -4,7 +4,9 @@ using UnityEngine;
 
 public class PlayerModel : MonoBehaviour
 {
-    public float velocity;
+    private float velocity;
+    private bool canCreateSpringBox;
 
     public float Velocity { get => velocity; set => velocity = value; }
+    public bool CanCreateSpringBox { get => canCreateSpringBox; set => canCreateSpringBox = value; }
 }

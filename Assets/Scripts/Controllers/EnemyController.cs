@@ -12,7 +12,7 @@ public class EnemyController : MonoBehaviour
     {
         player = GameObject.Find("/GameObjects/Player");
         enemy = GetComponent<EnemyModel>();
-        enemyRb = GetComponent<Rigidbody>();
+        enemyRb = enemy.GetComponent<Rigidbody>();
         SetDefaultValues();
     }
     void Update()
@@ -23,7 +23,7 @@ public class EnemyController : MonoBehaviour
         movePosition.y = Mathf.MoveTowards(transform.position.y, 1f, enemy.Velocity);
         enemyRb.MovePosition(movePosition);
         enemyRb.velocity = new Vector3(enemyRb.velocity.x, 1f, enemyRb.velocity.z);
-        enemyRb.velocity = enemyRb.velocity.normalized * enemy.velocity;
+        enemyRb.velocity = enemyRb.velocity.normalized * enemy.Velocity;
     }
 
     private void SetDefaultValues()

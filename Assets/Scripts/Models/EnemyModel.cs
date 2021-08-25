@@ -4,7 +4,7 @@ using UnityEngine;
 
 public class EnemyModel : MonoBehaviour
 {
-    public float velocity;
+    private float velocity;
 
     public float Velocity { get => velocity; set => velocity = value; }
 }

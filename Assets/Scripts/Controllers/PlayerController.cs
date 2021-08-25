@@ -8,62 +8,44 @@ using Random = UnityEngine.Random;
 public class PlayerController : MonoBehaviour
 {
     private PlayerModel player;
-    private ScoreModel scoreModel;
     private Rigidbody playerRb;
     public GameObject springBox;
+    private GameMasterController gameMasterController;
     // Start is called before the first frame update
     void Start()
     {
         player = GetComponent<PlayerModel>();
-        scoreModel = GameObject.Find("/ScoreCounter").GetComponent<ScoreModel>();
         playerRb = player.GetComponent<Rigidbody>();
+        gameMasterController = GameObject.Find("/GameMaster").GetComponent<GameMasterController>();
         SetDefaultValues();
         InitiateRandomMoviment();
-        StartCoroutine("updateScore");
     }
 
     // Update is called once per frame
     void Update()
     {
         playerRb.velocity = new Vector3(playerRb.velocity.x, 1f, playerRb.velocity.z);
-        playerRb.velocity = playerRb.velocity.normalized * player.velocity;
+        playerRb.velocity = playerRb.velocity.normalized * player.Velocity;
         transform.position = new Vector3(transform.position.x, 1f, transform.position.z);
         SpawnSpringBox();
-    }
-
-    public int getScore()
-    {
-        return scoreModel.Score;
-    }
-    IEnumerator updateScore()
-    {
-        while (true) { 
-            yield return new WaitForSeconds(1f);
-            scoreModel.Score--;
-        }
     }
 
     void OnCollisionEnter(Collision collision)
     {
         if (collision.gameObject.tag == "Enemy")
         {
-            SceneManager.LoadScene("SceneGameMenu");
+            gameMasterController.MoveToGameOverScene();
         }
 
         if (collision.gameObject.tag == "Finish")
         {
-                SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex + 1);
-                scoreModel.Score += 1000;
+            gameMasterController.MoveToNextLevel();
         }
     }
     private void SetDefaultValues()
     {
         player.Velocity = 5.0f;
-
-        if (SceneManager.GetActiveScene().name == "SceneLevel1") {
-            scoreModel.Score = 1000;
-        }
-
+        player.CanCreateSpringBox = true;
     }
 
 
@@ -74,7 +56,7 @@ public class PlayerController : MonoBehaviour
             RaycastHit hit;
             //Ray ray = Camera.main.ScreenPointToRay(Input.GetTouch(0).position);
             Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
-            if (Physics.Raycast(ray, out hit) && hit.collider.tag == "Terrain")
+            if (Physics.Raycast(ray, out hit) && (hit.collider.tag != "Player" && hit.collider.tag != "Enemy") && player.CanCreateSpringBox)
             {
                 Instantiate(springBox, new Vector3(hit.point.x, 0.5f, hit.point.z), Quaternion.identity);
             }
@@ -87,4 +69,13 @@ public class PlayerController : MonoBehaviour
         playerRb.velocity = new Vector3(player.Velocity * -1, 1f, Random.Range(player.Velocity * -1, player.Velocity));
     }
 
+    public void setCanCreateSpringBox(bool value)
+    {
+        player.CanCreateSpringBox = value;
+    }
+
+    public bool getCanCreateSpringBox()
+    {
+        return player.CanCreateSpringBox;
+    }
 }
