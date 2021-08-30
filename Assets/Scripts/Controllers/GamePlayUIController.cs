@@ -1,6 +1,7 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.IO;
 using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityEngine.SceneManagement;
@@ -13,13 +14,30 @@ public class GamePlayUIController : MonoBehaviour
     private Text scoreText;
     void Start()
     {
+        int levelIndex;
+        try
+        {
+            levelIndex = SaveGameDAO.GetInstance().Read().LevelIndex;
+        }
+        catch (FileNotFoundException)
+        {
+            levelIndex = 1;   
+        }
         sceneManagerController = GetComponent<SceneManagerController>();
         gameMasterController = GameObject.Find("/GameMaster").GetComponent<GameMasterController>();
         scoreText = GameObject.Find("UI/CnvGamePlay/TxtScore").GetComponent<Text>();
         GameObject.Find("/UI/CnvPaused").GetComponent<Canvas>().enabled = false;
         GameObject.Find("/UI/CnvGamePlay/BtnPause").GetComponent<Button>().onClick.AddListener(pauseGame);
         GameObject.Find("/UI/CnvPaused/BtnPlay").GetComponent<Button>().onClick.AddListener(playGame);
-        GameObject.Find("/UI/CnvPaused/BtnRestart").GetComponent<Button>().onClick.AddListener(sceneManagerController.goToSceneGamePlay);
+        GameObject.Find("/UI/CnvPaused/BtnRestart").GetComponent<Button>().onClick.AddListener(delegate { 
+            if (SceneManager.GetActiveScene().name != "SceneLevel1")
+            {
+                sceneManagerController.goToContinueGamePlay(levelIndex);
+            } else
+            {
+                sceneManagerController.goToContinueGamePlay(1);
+            }
+        });
         GameObject.Find("/UI/CnvPaused/BtnQuit").GetComponent<Button>().onClick.AddListener(sceneManagerController.goToSceneGameMenu);
         setInitialValues();
     }

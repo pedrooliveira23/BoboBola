@@ -1,6 +1,7 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.IO;
 using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityEngine.SceneManagement;
@@ -38,6 +39,13 @@ public class GameMasterController : MonoBehaviour
     {
         if (SceneManager.GetActiveScene().buildIndex + 1 < SceneManager.sceneCountInBuildSettings)
         {
+            try
+            {
+                SaveGameDAO.GetInstance().Update(new SaveGameModel(SceneManager.GetActiveScene().buildIndex+1));
+            } catch(FileNotFoundException)
+            {
+                SaveGameDAO.GetInstance().Create(new SaveGameModel(SceneManager.GetActiveScene().buildIndex + 1));
+            }
             SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex + 1);
         } else
         {

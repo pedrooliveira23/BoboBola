@@ -14,6 +14,7 @@ public class PlayerController : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
+        Screen.sleepTimeout = SleepTimeout.NeverSleep;
         player = GetComponent<PlayerModel>();
         playerRb = player.GetComponent<Rigidbody>();
         gameMasterController = GameObject.Find("/GameMaster").GetComponent<GameMasterController>();
