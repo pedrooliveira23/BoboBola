@@ -12,19 +12,23 @@ public class GameOverUIController : MonoBehaviour
     private GameMasterController gameMasterController;
     void Start()
     {
+        sceneManagerController = GetComponent<SceneManagerController>();
+        gameMasterController = GameObject.Find("/GameMaster").GetComponent<GameMasterController>();
         int levelIndex;
         try
         {
             levelIndex = SaveGameDAO.GetInstance().Read().LevelIndex;
+            if(gameMasterController.getLastLevel() < levelIndex)
+            {
+                levelIndex = 1;
+            }
         }
         catch (FileNotFoundException)
         {
             levelIndex = 1;
         }
-        sceneManagerController = GetComponent<SceneManagerController>();
-        gameMasterController = GameObject.Find("/GameMaster").GetComponent<GameMasterController>();
         GameObject.Find("/CanvasMenu/BtnRestart").GetComponent<Button>().onClick.AddListener(delegate { sceneManagerController.goToContinueGamePlay(levelIndex); });
-        GameObject.Find("/CanvasMenu/BtnQuit").GetComponent<Button>().onClick.AddListener(sceneManagerController.quitGame);
+        GameObject.Find("/CanvasMenu/BtnQuit").GetComponent<Button>().onClick.AddListener(sceneManagerController.goToSceneGameMenu);
 
         GameObject.Find("/CanvasMenu/TxtLevel").GetComponent<Text>().text = "Nível Alcançado: " + (gameMasterController.getLastLevel() == 0 ? "Máximo" : gameMasterController.getLastLevel().ToString());
     }
